@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seguridad y Privacidad de Datos | Unidad 3</title>
+<meta name="description" content="Guía interactiva: gestión segura de datos, borrado y destrucción, remanencia, prevención de fuga de información y privacidad.">
+<style>
+:root{
+  --bg:#070b14;--bg2:#0d1424;--card:#111a2e;--line:#1f2d4a;
+  --tx:#e6edf7;--mut:#8fa0bf;--a:#38e1c6;--b:#6c8cff;--c:#ff6b8b;--w:#ffb454;
+  --r:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--tx);line-height:1.6;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;z-index:-1;
+  background:radial-gradient(900px 500px at 15% -10%,#17325a55,transparent),
+             radial-gradient(800px 500px at 100% 10%,#2a1a5e44,transparent),var(--bg)}
+a{color:var(--a)}
+.wrap{max-width:1050px;margin:0 auto;padding:0 20px}
+/* nav */
+nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:#070b14cc;border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;gap:6px;align-items:center;overflow-x:auto;padding:10px 20px;scrollbar-width:none}
+nav b{color:var(--a);margin-right:10px;white-space:nowrap}
+nav a{color:var(--mut);text-decoration:none;font-size:.85rem;padding:6px 12px;border-radius:99px;white-space:nowrap;transition:.2s}
+nav a:hover,nav a.on{background:var(--card);color:var(--tx)}
+/* hero */
+header.hero{padding:90px 0 60px;text-align:center;position:relative}
+.tag{display:inline-block;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--a);border:1px solid #38e1c644;padding:5px 14px;border-radius:99px;background:#38e1c610}
+h1{font-size:clamp(2rem,6vw,3.8rem);line-height:1.1;margin:20px 0 16px;background:linear-gradient(120deg,#fff,var(--a) 50%,var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--mut);max-width:640px;margin:0 auto 30px;font-size:1.1rem}
+.chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.chip{background:var(--card);border:1px solid var(--line);padding:10px 16px;border-radius:12px;text-decoration:none;color:var(--tx);font-size:.9rem;transition:.25s}
+.chip:hover{transform:translateY(-3px);border-color:var(--a);box-shadow:0 8px 30px #38e1c61f}
+.chip small{display:block;color:var(--a);font-weight:700}
+/* sections */
+section{padding:70px 0;border-top:1px solid var(--line)}
+.num{font-family:ui-monospace,Menlo,monospace;color:var(--a);font-size:.9rem}
+h2{font-size:clamp(1.6rem,4vw,2.4rem);margin:6px 0 10px}
+h3{font-size:1.25rem;margin:36px 0 10px;display:flex;gap:10px;align-items:baseline}
+h3 .num{font-size:.85rem}
+.lead{color:var(--mut);max-width:780px;margin-bottom:24px}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px;transition:.25s}
+.card:hover{border-color:#38e1c655}
+.card h4{margin-bottom:6px;font-size:1.02rem}
+.card p,.card li{color:var(--mut);font-size:.93rem}
+.card ul{padding-left:18px}
+.ico{font-size:1.6rem;margin-bottom:8px}
+.pill{display:inline-block;font-size:.72rem;padding:2px 9px;border-radius:99px;font-weight:700;margin-right:6px}
+.p-a{background:#38e1c61f;color:var(--a)}.p-b{background:#6c8cff22;color:var(--b)}.p-c{background:#ff6b8b22;color:var(--c)}.p-w{background:#ffb45422;color:var(--w)}
+.callout{border-left:3px solid var(--w);background:#ffb45410;padding:14px 18px;border-radius:0 12px 12px 0;color:#e9d9bd;font-size:.93rem;margin:20px 0}
+/* widgets */
+.widget{background:linear-gradient(180deg,var(--card),var(--bg2));border:1px solid var(--line);border-radius:20px;padding:24px;margin:22px 0}
+.widget>.wt{display:flex;align-items:center;gap:10px;font-weight:700;margin-bottom:14px}
+.wt span.live{font-size:.7rem;background:#38e1c622;color:var(--a);padding:2px 8px;border-radius:99px}
+button,select,textarea,input{font:inherit}
+.btn{background:var(--a);color:#04201b;border:0;padding:10px 18px;border-radius:10px;font-weight:700;cursor:pointer;transition:.2s}
+.btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.btn.ghost{background:transparent;color:var(--tx);border:1px solid var(--line)}
+.btn.ghost:hover{border-color:var(--a)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+select,textarea,input[type=text]{background:#0a1121;color:var(--tx);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%}
+textarea{min-height:130px;resize:vertical;font-family:ui-monospace,Menlo,monospace;font-size:.88rem}
+label{font-size:.85rem;color:var(--mut)}
+.two{display:grid;gap:16px;grid-template-columns:1fr 1fr}
+@media(max-width:720px){.two{grid-template-columns:1fr}}
+/* access matrix */
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th,td{padding:9px 8px;text-align:center;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--mut);font-weight:600}
+.cell{width:28px;height:28px;border-radius:8px;border:1px solid var(--line);background:#0a1121;cursor:pointer;color:var(--a);font-weight:700;transition:.15s}
+.cell.on{background:#38e1c622;border-color:var(--a)}
+.log{background:#050810;border:1px solid var(--line);border-radius:12px;padding:12px;height:210px;overflow:auto;font-family:ui-monospace,Menlo,monospace;font-size:.8rem}
+.log div{padding:2px 0;border-bottom:1px dashed #16213a}
+.ok{color:var(--a)}.no{color:var(--c)}.dim{color:var(--mut)}
+/* wipe */
+.drive{display:grid;grid-template-columns:repeat(40,1fr);gap:2px;margin:12px 0}
+.drive i{aspect-ratio:1;border-radius:2px;background:var(--b);transition:background .25s}
+.bar{height:8px;background:#0a1121;border-radius:99px;overflow:hidden;margin-top:8px}
+.bar>b{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--a),var(--b));transition:width .3s}
+/* tabs */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.tab{background:transparent;border:1px solid var(--line);color:var(--mut);padding:8px 14px;border-radius:99px;cursor:pointer;transition:.2s}
+.tab.on{background:var(--a);color:#04201b;border-color:var(--a);font-weight:700}
+.panel{display:none;animation:f .35s}.panel.on{display:block}
+@keyframes f{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
+/* accordion */
+details{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 18px;margin-bottom:10px}
+details[open]{border-color:#38e1c655}
+summary{cursor:pointer;font-weight:600;list-style:none;display:flex;justify-content:space-between}
+summary::after{content:"+";color:var(--a);font-size:1.2rem}
+details[open] summary::after{content:"–"}
+details p{color:var(--mut);margin-top:10px;font-size:.93rem}
+/* quiz / checklist */
+.q{margin-bottom:18px}
+.q p{font-weight:600;margin-bottom:8px}
+.opt{display:block;width:100%;text-align:left;background:#0a1121;border:1px solid var(--line);color:var(--tx);padding:10px 14px;border-radius:10px;margin-bottom:6px;cursor:pointer;transition:.15s}
+.opt:hover{border-color:var(--a)}
+.opt.good{background:#38e1c622;border-color:var(--a)}
+.opt.bad{background:#ff6b8b22;border-color:var(--c)}
+.check{display:flex;gap:10px;align-items:flex-start;padding:10px;border-radius:10px;cursor:pointer}
+.check:hover{background:#ffffff08}
+.check input{margin-top:5px;accent-color:var(--a)}
+.score{font-size:2.4rem;font-weight:800;color:var(--a)}
+.mem{display:grid;grid-template-columns:repeat(16,1fr);gap:3px;margin:10px 0}
+.mem i{aspect-ratio:1;background:var(--c);border-radius:3px;opacity:1;transition:opacity 1.2s}
+.mem.fade i{opacity:.08}
+footer{padding:40px 0;text-align:center;color:var(--mut);font-size:.85rem;border-top:1px solid var(--line)}
+.reveal{opacity:0;transform:translateY(20px);transition:.6s}
+.reveal.in{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <b>🛡 Unidad 3</b>
+  <a href="#s31">3.1 Gestión</a>
+  <a href="#s32">3.2 Borrado</a>
+  <a href="#s33">3.3 Prevención de fuga</a>
+  <a href="#s34">3.4 Privacidad</a>
+  <a href="#quiz">Evaluación</a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <span class="tag">Ciberseguridad · Protección de la información</span>
+  <h1>Seguridad y Privacidad de Datos</h1>
+  <p>Una guía interactiva para entender cómo se controlan, auditan, eliminan y protegen los datos durante todo su ciclo de vida.</p>
+  <div class="chips">
+    <a class="chip" href="#s31"><small>3.1</small>Seguridad en la Gestión de Datos</a>
+    <a class="chip" href="#s32"><small>3.2</small>Borrado y Destrucción</a>
+    <a class="chip" href="#s33"><small>3.3</small>Prevención de Filtración</a>
+    <a class="chip" href="#s34"><small>3.4</small>Privacidad de Datos</a>
+  </div>
+</div></header>
+
+<!-- ============ 3.1 ============ -->
+<section id="s31"><div class="wrap">
+  <span class="num">3.1</span>
+  <h2 class="reveal">Seguridad en la Gestión de Datos</h2>
+  <p class="lead reveal">Gestionar datos de forma segura significa garantizar la tríada <b>CIA</b>: Confidencialidad, Integridad y Disponibilidad, a lo largo de todo su ciclo de vida: creación, almacenamiento, uso, compartición, archivo y destrucción.</p>
+
+  <div class="grid reveal">
+    <div class="card"><div class="ico">🔒</div><h4>Confidencialidad</h4><p>Solo quien debe ver la información, la ve. Se logra con cifrado y control de acceso.</p></div>
+    <div class="card"><div class="ico">✅</div><h4>Integridad</h4><p>Los datos no se alteran sin autorización. Hashes, firmas digitales y control de cambios.</p></div>
+    <div class="card"><div class="ico">⚡</div><h4>Disponibilidad</h4><p>Los datos están accesibles cuando se necesitan: respaldos, redundancia y planes de recuperación.</p></div>
+  </div>
+
+  <h3><span class="num">3.1.1</span> Políticas de acceso y auditoría</h3>
+  <p class="lead">Una política de acceso define <b>quién</b> puede hacer <b>qué</b> sobre <b>cuáles</b> datos. La auditoría registra lo que ocurrió para detectar abusos y demostrar cumplimiento.</p>
+
+  <div class="tabs" data-tabs="acc">
+    <button class="tab on" data-p="a1">Principios</button>
+    <button class="tab" data-p="a2">Modelos de control</button>
+    <button class="tab" data-p="a3">Auditoría</button>
+  </div>
+  <div class="panel on" data-g="acc" id="a1"><div class="grid">
+    <div class="card"><h4>Mínimo privilegio</h4><p>Cada usuario recibe únicamente los permisos indispensables para su función.</p></div>
+    <div class="card"><h4>Separación de funciones</h4><p>Ninguna persona controla un proceso crítico de principio a fin (quien aprueba no ejecuta).</p></div>
+    <div class="card"><h4>Need-to-know</h4><p>Aunque tengas autorización, solo accedes a lo que necesitas saber.</p></div>
+    <div class="card"><h4>AAA</h4><p>Autenticación (quién eres), Autorización (qué puedes) y Contabilidad (qué hiciste).</p></div>
+  </div></div>
+  <div class="panel" data-g="acc" id="a2"><div class="grid">
+    <div class="card"><span class="pill p-a">DAC</span><h4>Discrecional</h4><p>El dueño del recurso decide quién entra. Flexible, pero propenso a errores.</p></div>
+    <div class="card"><span class="pill p-b">MAC</span><h4>Obligatorio</h4><p>El sistema impone etiquetas (Confidencial, Secreto). Usado en entornos militares.</p></div>
+    <div class="card"><span class="pill p-w">RBAC</span><h4>Basado en roles</h4><p>Los permisos se asignan a roles y los usuarios heredan según su puesto.</p></div>
+    <div class="card"><span class="pill p-c">ABAC</span><h4>Basado en atributos</h4><p>Decide según contexto: hora, ubicación, dispositivo, sensibilidad del dato.</p></div>
+  </div></div>
+  <div class="panel" data-g="acc" id="a3"><div class="grid">
+    <div class="card"><h4>¿Qué registrar?</h4><ul><li>Inicios de sesión y fallos</li><li>Lectura, modificación y borrado</li><li>Cambios de permisos</li><li>Acciones de administradores</li></ul></div>
+    <div class="card"><h4>Buenas prácticas</h4><ul><li>Logs inmutables (WORM)</li><li>Sincronía de reloj (NTP)</li><li>Centralizar en un SIEM</li><li>Alertas ante anomalías</li></ul></div>
+    <div class="card"><h4>Para qué sirve</h4><ul><li>Detección de incidentes</li><li>Análisis forense</li><li>Cumplimiento (ISO 27001, PCI DSS)</li><li>No repudio</li></ul></div>
+  </div></div>
+
+  <div class="widget">
+    <div class="wt">🧪 Simulador RBAC + bitácora de auditoría <span class="live">INTERACTIVO</span></div>
+    <p class="lead" style="margin-bottom:12px">Activa o desactiva permisos por rol. Luego prueba un acceso y observa cómo se registra en la bitácora.</p>
+    <div class="two">
+      <div>
+        <table id="rbac"><thead><tr><th>Rol</th><th>Leer</th><th>Editar</th><th>Borrar</th><th>Admin</th></tr></thead><tbody></tbody></table>
+        <div style="margin-top:16px" class="row">
+          <div style="flex:1;min-width:120px"><label>Rol</label><select id="rbRole"></select></div>
+          <div style="flex:1;min-width:120px"><label>Acción</label><select id="rbAct"><option>Leer</option><option>Editar</option><option>Borrar</option><option>Admin</option></select></div>
+          <button class="btn" id="rbGo" style="align-self:flex-end">Intentar</button>
+        </div>
+      </div>
+      <div><label>Registro de auditoría</label><div class="log" id="rbLog"></div></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============ 3.2 ============ -->
+<section id="s32"><div class="wrap">
+  <span class="num">3.2</span>
+  <h2 class="reveal">Técnicas de Borrado y Destrucción de Datos</h2>
+  <p class="lead reveal">Eliminar un archivo normalmente solo borra su referencia en la tabla del sistema de archivos; el contenido sigue ahí hasta que se sobrescribe. Por eso existen técnicas formales para eliminar la información de manera irrecuperable.</p>
+
+  <h3><span class="num">3.2.1</span> Borrado seguro y destrucción física</h3>
+  <p class="lead">El estándar <b>NIST SP 800-88</b> define tres niveles de saneamiento:</p>
+  <div class="grid reveal">
+    <div class="card"><span class="pill p-a">CLEAR</span><h4>Limpiar</h4><p>Sobrescritura lógica con herramientas estándar. Protege contra recuperación básica. Ideal si el equipo seguirá en uso interno.</p></div>
+    <div class="card"><span class="pill p-w">PURGE</span><h4>Purgar</h4><p>Técnicas avanzadas: borrado criptográfico, Secure Erase / Sanitize del firmware, desmagnetización. Resiste laboratorios forenses.</p></div>
+    <div class="card"><span class="pill p-c">DESTROY</span><h4>Destruir</h4><p>Trituración, incineración, pulverización o desintegración del medio. El dispositivo ya no es reutilizable.</p></div>
+  </div>
+
+  <div class="widget">
+    <div class="wt">💽 Simulador de sobrescritura <span class="live">INTERACTIVO</span></div>
+    <div class="row" style="margin-bottom:10px">
+      <div style="flex:1;min-width:200px"><label>Método</label>
+        <select id="wMethod">
+          <option value="1">1 pasada (ceros) · Clear</option>
+          <option value="3">3 pasadas (DoD 5220.22-M)</option>
+          <option value="7">7 pasadas</option>
+          <option value="35">35 pasadas (Gutmann)</option>
+        </select></div>
+      <button class="btn" id="wGo" style="align-self:flex-end">Iniciar borrado</button>
+      <button class="btn ghost" id="wReset" style="align-self:flex-end">Reiniciar</button>
+    </div>
+    <div class="drive" id="drive"></div>
+    <div class="bar"><b id="wBar"></b></div>
+    <p id="wInfo" class="dim" style="margin-top:10px;font-size:.9rem">Listo. Los bloques azules contienen datos del usuario.</p>
+    <div class="callout">En discos modernos, una sola pasada suele bastar. Las 35 pasadas de Gutmann fueron diseñadas para tecnologías antiguas y hoy son innecesarias.</div>
+  </div>
+
+  <div class="tabs" data-tabs="med">
+    <button class="tab on" data-p="m1">HDD</button>
+    <button class="tab" data-p="m2">SSD / Flash</button>
+    <button class="tab" data-p="m3">Medios ópticos / papel</button>
+    <button class="tab" data-p="m4">Nube</button>
+  </div>
+  <div class="panel on" data-g="med" id="m1"><div class="card"><h4>Discos magnéticos</h4><p>Sobrescritura, degaussing (desmagnetización) y trituración. El degaussing inutiliza el disco por completo.</p></div></div>
+  <div class="panel" data-g="med" id="m2"><div class="card"><h4>Unidades de estado sólido</h4><p>La sobrescritura es <b>poco fiable</b> por el wear-leveling y el sobreaprovisionamiento: los datos pueden quedar en celdas inaccesibles. Usa <b>ATA Secure Erase, NVMe Sanitize, borrado criptográfico</b> o destrucción física.</p></div></div>
+  <div class="panel" data-g="med" id="m3"><div class="card"><h4>CD/DVD, cintas y papel</h4><p>Trituradoras de corte cruzado o micro-corte, incineración y pulverización. Define tamaño de partícula según clasificación.</p></div></div>
+  <div class="panel" data-g="med" id="m4"><div class="card"><h4>Entornos en la nube</h4><p>No controlas el hardware. Aplica <b>crypto-shredding</b>: cifra todo y destruye las claves. Sin la clave, los datos quedan ilegibles.</p></div></div>
+
+  <h3><span class="num">3.2.2</span> Remanencia de memoria y riesgos asociados</h3>
+  <p class="lead">La <b>remanencia de datos</b> es la información residual que permanece en un medio después de intentar borrarla. Puede estar en discos, pero también en memoria RAM, archivos temporales y respaldos.</p>
+
+  <div class="grid reveal">
+    <div class="card"><div class="ico">🧊</div><h4>Cold boot attack</h4><p>La RAM conserva su contenido por segundos o minutos tras apagarse, más tiempo si se enfría. Un atacante puede extraer claves de cifrado.</p></div>
+    <div class="card"><div class="ico">📄</div><h4>Swap, hibernación y volcados</h4><p>Los datos de la RAM se escriben en disco (pagefile, hiberfil.sys, core dumps) y persisten sin que el usuario lo note.</p></div>
+    <div class="card"><div class="ico">🗂</div><h4>Espacio no asignado</h4><p>Archivos "eliminados" que siguen en sectores libres y se recuperan con herramientas forenses.</p></div>
+    <div class="card"><div class="ico">💾</div><h4>Sectores ocultos</h4><p>Bloques dañados, HPA/DCO en HDD y celdas reservadas en SSD no accesibles al borrado normal.</p></div>
+  </div>
+
+  <div class="widget">
+    <div class="wt">🧠 Remanencia en RAM <span class="live">INTERACTIVO</span></div>
+    <p class="lead" style="margin-bottom:8px">Simula el apagado de un equipo y observa cómo se desvanecen los datos de la memoria con o sin enfriamiento.</p>
+    <div class="mem" id="mem"></div>
+    <div class="row">
+      <button class="btn" id="memOff">Apagar equipo</button>
+      <button class="btn ghost" id="memCold">Apagar y enfriar</button>
+      <button class="btn ghost" id="memRst">Restaurar</button>
+    </div>
+    <p id="memInfo" class="dim" style="margin-top:10px;font-size:.9rem">Estado: encendido. Memoria cargada con datos y claves.</p>
+  </div>
+
+  <h4 style="margin:24px 0 10px">Contramedidas</h4>
+  <details><summary>Cifrado de disco completo (BitLocker, LUKS, FileVault)</summary><p>Aunque queden restos de datos, estarán cifrados. Es la defensa de base.</p></details>
+  <details><summary>Limpiar memoria y claves tras su uso</summary><p>Sobrescribir buffers sensibles en el código (memset seguro) y evitar que las claves persistan en RAM.</p></details>
+  <details><summary>Cifrar o desactivar swap e hibernación</summary><p>Evita que contenido de la RAM quede en disco sin protección.</p></details>
+  <details><summary>Memoria con cifrado (TME, SEV) y protección física</summary><p>El cifrado de RAM por hardware y los controles de acceso físico limitan los ataques de arranque en frío.</p></details>
+</div></section>
+
+<!-- ============ 3.3 ============ -->
+<section id="s33"><div class="wrap">
+  <span class="num">3.3</span>
+  <h2 class="reveal">Técnicas de Prevención de Filtración de Datos</h2>
+  <p class="lead reveal">La filtración (data leakage) ocurre cuando información sensible sale de la organización de forma accidental o maliciosa. Las soluciones <b>DLP</b> (Data Loss Prevention) buscan evitarlo en tres estados del dato.</p>
+
+  <div class="grid reveal">
+    <div class="card"><span class="pill p-b">En reposo</span><h4>Data at rest</h4><p>Discos, bases de datos, respaldos. Cifrado, control de acceso y descubrimiento de datos sensibles.</p></div>
+    <div class="card"><span class="pill p-a">En tránsito</span><h4>Data in motion</h4><p>Correo, web, transferencias. TLS, inspección de tráfico, bloqueo de envíos no autorizados.</p></div>
+    <div class="card"><span class="pill p-w">En uso</span><h4>Data in use</h4><p>Copiar, imprimir, capturar pantalla. Controles en el endpoint y marcas de agua.</p></div>
+  </div>
+
+  <h3>Controles principales</h3>
+  <div class="grid">
+    <div class="card"><h4>🏷 Clasificación</h4><p>Etiquetar: Público, Interno, Confidencial, Restringido. Sin clasificar no se puede proteger.</p></div>
+    <div class="card"><h4>🛡 DLP</h4><p>Reglas con patrones (tarjetas, CURP, RFC) y huellas digitales de documentos.</p></div>
+    <div class="card"><h4>🔐 Cifrado y gestión de claves</h4><p>Cifrar datos sensibles y custodiar claves en HSM o KMS.</p></div>
+    <div class="card"><h4>🔌 Control de dispositivos</h4><p>Bloquear USB no autorizados, restringir impresión y almacenamiento externo.</p></div>
+    <div class="card"><h4>☁️ CASB / Shadow IT</h4><p>Visibilidad sobre servicios en la nube no autorizados.</p></div>
+    <div class="card"><h4>👤 UEBA y amenaza interna</h4><p>Detectar comportamiento anómalo, como descargas masivas fuera de horario.</p></div>
+    <div class="card"><h4>🎓 Concientización</h4><p>El phishing y el error humano son causas principales de fuga.</p></div>
+    <div class="card"><h4>🧱 Segmentación y Zero Trust</h4><p>Verificar siempre y limitar el movimiento lateral.</p></div>
+  </div>
+
+  <div class="widget">
+    <div class="wt">🔎 Escáner DLP en vivo <span class="live">INTERACTIVO</span></div>
+    <p class="lead" style="margin-bottom:12px">Pega o escribe un texto. El motor detectará datos sensibles y los enmascarará, como lo haría una regla DLP. Todo se procesa en tu navegador; nada se envía a ningún servidor.</p>
+    <div class="two">
+      <div><label>Texto de entrada</label>
+        <textarea id="dIn">Hola, mi correo es ana.lopez@empresa.mx y mi tarjeta 4111 1111 1111 1111. Mi CURP: GOMA800101HDFRRN09, tel 55 1234 5678. IP del servidor 192.168.1.15.</textarea>
+        <div class="row" style="margin-top:10px"><button class="btn" id="dGo">Analizar</button><button class="btn ghost" id="dEx">Ejemplo limpio</button></div>
+      </div>
+      <div><label>Resultado (enmascarado)</label>
+        <div class="log" id="dOut" style="height:130px;white-space:pre-wrap"></div>
+        <div id="dRes" style="margin-top:10px;font-size:.9rem"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout">Ningún control es infalible. La prevención de fuga requiere capas combinadas: personas, procesos y tecnología.</div>
+</div></section>
+
+<!-- ============ 3.4 ============ -->
+<section id="s34"><div class="wrap">
+  <span class="num">3.4</span>
+  <h2 class="reveal">Privacidad de Datos</h2>
+  <p class="lead reveal">Seguridad y privacidad no son lo mismo. La <b>seguridad</b> protege los datos contra accesos no autorizados; la <b>privacidad</b> define cómo, para qué y con qué permiso se recopilan y usan los datos personales.</p>
+
+  <div class="grid reveal">
+    <div class="card"><h4>Datos personales</h4><p>Cualquier información que identifica a una persona: nombre, correo, teléfono, CURP, IP.</p></div>
+    <div class="card"><h4>Datos sensibles</h4><p>Afectan la esfera más íntima: salud, biométricos, origen étnico, creencias, orientación sexual. Requieren protección reforzada.</p></div>
+  </div>
+
+  <h3>Principios de protección de datos</h3>
+  <div class="tabs" data-tabs="pri">
+    <button class="tab on" data-p="r1">Principios</button>
+    <button class="tab" data-p="r2">Derechos ARCO</button>
+    <button class="tab" data-p="r3">Marco normativo</button>
+    <button class="tab" data-p="r4">Técnicas</button>
+  </div>
+  <div class="panel on" data-g="pri" id="r1"><div class="grid">
+    <div class="card"><h4>Licitud y consentimiento</h4><p>Tratar datos solo con base legal y autorización del titular.</p></div>
+    <div class="card"><h4>Finalidad</h4><p>Usar los datos únicamente para el propósito informado.</p></div>
+    <div class="card"><h4>Minimización</h4><p>Recabar solo lo estrictamente necesario.</p></div>
+    <div class="card"><h4>Calidad y conservación</h4><p>Datos exactos y conservados solo el tiempo necesario.</p></div>
+    <div class="card"><h4>Responsabilidad y transparencia</h4><p>Aviso de privacidad claro y rendición de cuentas.</p></div>
+  </div></div>
+  <div class="panel" data-g="pri" id="r2"><div class="grid">
+    <div class="card"><span class="pill p-a">A</span><h4>Acceso</h4><p>Conocer qué datos tienen de ti y cómo se usan.</p></div>
+    <div class="card"><span class="pill p-b">R</span><h4>Rectificación</h4><p>Corregir datos inexactos o incompletos.</p></div>
+    <div class="card"><span class="pill p-c">C</span><h4>Cancelación</h4><p>Solicitar la eliminación de tus datos.</p></div>
+    <div class="card"><span class="pill p-w">O</span><h4>Oposición</h4><p>Oponerte a un uso específico de tus datos.</p></div>
+  </div></div>
+  <div class="panel" data-g="pri" id="r3"><div class="grid">
+    <div class="card"><h4>🇲🇽 México</h4><p>Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP) y su normativa vigente.</p></div>
+    <div class="card"><h4>🇪🇺 Unión Europea</h4><p>RGPD / GDPR: consentimiento, derecho al olvido, portabilidad y multas elevadas.</p></div>
+    <div class="card"><h4>🇺🇸 EE. UU.</h4><p>Leyes sectoriales y estatales como CCPA/CPRA, HIPAA.</p></div>
+    <div class="card"><h4>🌐 Estándares</h4><p>ISO/IEC 27001, 27701 (gestión de privacidad) y marcos NIST.</p></div>
+  </div><p class="dim" style="margin-top:10px;font-size:.85rem">Verifica siempre la versión vigente de cada normativa, ya que se actualizan con frecuencia.</p></div>
+  <div class="panel" data-g="pri" id="r4"><div class="grid">
+    <div class="card"><h4>Anonimización</h4><p>Elimina de forma irreversible la relación con la persona.</p></div>
+    <div class="card"><h4>Seudonimización</h4><p>Sustituye identificadores por códigos; es reversible con información adicional.</p></div>
+    <div class="card"><h4>Enmascaramiento</h4><p>Oculta parte del dato: ****-****-****-1111.</p></div>
+    <div class="card"><h4>Privacidad diferencial</h4><p>Añade ruido estadístico para proteger individuos en análisis agregados.</p></div>
+    <div class="card"><h4>Privacy by Design</h4><p>La privacidad se integra desde el diseño del sistema, no después.</p></div>
+  </div></div>
+
+  <div class="widget">
+    <div class="wt">✅ Lista de verificación de privacidad <span class="live">INTERACTIVO</span></div>
+    <div id="chk"></div>
+    <div class="bar"><b id="chkBar"></b></div>
+    <p id="chkTxt" class="dim" style="margin-top:8px;font-size:.9rem">0 de 8 completados</p>
+  </div>
+</div></section>
+
+<!-- ============ QUIZ ============ -->
+<section id="quiz"><div class="wrap">
+  <span class="num">Evaluación</span>
+  <h2>Pon a prueba lo aprendido</h2>
+  <div class="widget">
+    <div id="qBox"></div>
+    <div class="row" style="margin-top:10px"><div class="score" id="qScore">0/5</div><button class="btn ghost" id="qRst">Reiniciar</button></div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">Unidad 3 · Seguridad y privacidad de datos — Material educativo interactivo.</div></footer>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+
+/* reveal on scroll */
+const io=new IntersectionObserver(e=>e.forEach(x=>x.isIntersecting&&x.target.classList.add('in')),{threshold:.1});
+$$('.reveal').forEach(el=>io.observe(el));
+
+/* nav highlight */
+const secs=$$('section[id]'),links=$$('nav a');
+addEventListener('scroll',()=>{let cur='';secs.forEach(s=>{if(scrollY>=s.offsetTop-120)cur=s.id});
+  links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+cur))});
+
+/* tabs */
+$$('.tabs').forEach(t=>{const g=t.dataset.tabs;
+  t.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
+    t.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+    $$('.panel[data-g="'+g+'"]').forEach(p=>p.classList.toggle('on',p.id===b.dataset.p));});});
+
+/* ---- RBAC ---- */
+const roles={Invitado:[1,0,0,0],Analista:[1,1,0,0],Gerente:[1,1,1,0],Administrador:[1,1,1,1]};
+const acts=['Leer','Editar','Borrar','Admin'];
+const tb=$('#rbac tbody'),rs=$('#rbRole'),log=$('#rbLog');
+Object.keys(roles).forEach(r=>{
+  const tr=document.createElement('tr');tr.innerHTML='<td>'+r+'</td>';
+  roles[r].forEach((v,i)=>{const td=document.createElement('td'),b=document.createElement('button');
+    b.className='cell'+(v?' on':'');b.textContent=v?'✓':'';
+    b.onclick=()=>{roles[r][i]=roles[r][i]?0:1;b.classList.toggle('on');b.textContent=roles[r][i]?'✓':'';
+      addLog('<span class="dim">POLICY</span> permiso <b>'+acts[i]+'</b> de '+r+' → '+(roles[r][i]?'<span class="ok">concedido</span>':'<span class="no">revocado</span>'));};
+    td.appendChild(b);tr.appendChild(td)});
+  tb.appendChild(tr);rs.add(new Option(r,r));});
+function addLog(h){const d=document.createElement('div'),t=new Date().toLocaleTimeString('es-MX');
+  d.innerHTML='<span class="dim">'+t+'</span> '+h;log.prepend(d);}
+addLog('<span class="dim">SYSTEM</span> auditoría iniciada');
+$('#rbGo').onclick=()=>{const r=rs.value,a=$('#rbAct').value,ok=roles[r][acts.indexOf(a)];
+  addLog('<span class="dim">ACCESS</span> '+r+' → '+a+' sobre <i>expediente_clientes</i>: '+(ok?'<span class="ok">PERMITIDO</span>':'<span class="no">DENEGADO</span>'));};
+
+/* ---- Wipe ---- */
+const drive=$('#drive');for(let i=0;i<200;i++)drive.appendChild(document.createElement('i'));
+const cells=[...drive.children];let timer;
+const pat=['#ff6b8b','#ffb454','#38e1c6','#6c8cff'];
+function wipeReset(){clearInterval(timer);cells.forEach(c=>c.style.background='');$('#wBar').style.width='0';
+  $('#wInfo').textContent='Listo. Los bloques azules contienen datos del usuario.';$('#wGo').disabled=false;}
+$('#wReset').onclick=wipeReset;
+$('#wGo').onclick=()=>{wipeReset();const n=+$('#wMethod').value;let pass=1,i=0;$('#wGo').disabled=true;
+  timer=setInterval(()=>{
+    for(let k=0;k<10&&i<cells.length;k++,i++)cells[i].style.background=pass===n?'#1b2742':pat[pass%4];
+    const prog=((pass-1)*cells.length+i)/(n*cells.length)*100;$('#wBar').style.width=prog+'%';
+    $('#wInfo').textContent='Pasada '+pass+' de '+n+'…';
+    if(i>=cells.length){if(pass>=n){clearInterval(timer);$('#wBar').style.width='100%';
+        $('#wInfo').innerHTML='<span class="ok">✔ Borrado completado.</span> '+n+' pasada(s) aplicadas.';$('#wGo').disabled=false;}
+      else{pass++;i=0;}}
+  },n>10?8:40);};
+
+/* ---- RAM remanence ---- */
+const mem=$('#mem');for(let i=0;i<96;i++){const e=document.createElement('i');e.style.opacity=.55+Math.random()*.45;mem.appendChild(e);}
+function memFade(sec,msg){mem.classList.remove('fade');
+  [...mem.children].forEach(e=>e.style.transitionDuration=(sec*(.6+Math.random()*.8))+'s');
+  void mem.offsetWidth;mem.classList.add('fade');$('#memInfo').innerHTML=msg;}
+$('#memOff').onclick=()=>memFade(3,'Equipo apagado. La memoria se degrada en pocos segundos a temperatura ambiente.');
+$('#memCold').onclick=()=>memFade(14,'<span class="no">Enfriada:</span> los datos persisten mucho más tiempo. Un atacante podría extraer claves de cifrado.');
+$('#memRst').onclick=()=>{mem.classList.remove('fade');[...mem.children].forEach(e=>e.style.transitionDuration='.2s');
+  $('#memInfo').textContent='Estado: encendido. Memoria cargada con datos y claves.';};
+
+/* ---- DLP ---- */
+const rules=[
+ ['Tarjeta',/\b(?:\d[ -]?){13,16}\b/g,m=>'****-****-****-'+m.replace(/\D/g,'').slice(-4)],
+ ['Correo',/[\w.+-]+@[\w-]+\.[\w.]+/g,m=>m[0]+'***@***'],
+ ['CURP',/\b[A-Z]{4}\d{6}[HM][A-Z]{5}[A-Z0-9]\d\b/g,()=>'[CURP]'],
+ ['Teléfono',/\b\d{2}[ -]?\d{4}[ -]?\d{4}\b/g,()=>'[TEL]'],
+ ['IP',/\b(?:\d{1,3}\.){3}\d{1,3}\b/g,()=>'[IP]']];
+function dlp(){let t=$('#dIn').value,found={};
+  rules.forEach(([n,re,f])=>{t=t.replace(re,m=>{found[n]=(found[n]||0)+1;return f(m)})});
+  $('#dOut').textContent=t;const k=Object.keys(found);
+  $('#dRes').innerHTML=k.length?'<span class="no">⚠ '+k.reduce((a,x)=>a+found[x],0)+' elementos sensibles</span> — '+k.map(x=>'<span class="pill p-c">'+x+' ×'+found[x]+'</span>').join(''):'<span class="ok">✔ Sin datos sensibles detectados.</span>';}
+$('#dGo').onclick=dlp;$('#dEx').onclick=()=>{$('#dIn').value='La reunión del equipo será el jueves a las 10:00 en la sala 2.';dlp();};dlp();
+
+/* ---- Checklist ---- */
+const items=['Aviso de privacidad visible y claro','Consentimiento recabado antes de tratar datos','Solo se recopilan los datos necesarios','Datos sensibles cifrados','Acceso restringido por roles','Procedimiento para derechos ARCO','Plazo de conservación definido y borrado seguro','Plan de respuesta a incidentes y notificación'];
+const chk=$('#chk');items.forEach((t,i)=>{const l=document.createElement('label');l.className='check';
+  l.innerHTML='<input type="checkbox"><span>'+t+'</span>';l.firstChild.onchange=upd;chk.appendChild(l)});
+function upd(){const n=$$('#chk input:checked').length;$('#chkBar').style.width=(n/items.length*100)+'%';
+  $('#chkTxt').textContent=n+' de '+items.length+' completados'+(n===items.length?' 🎉':'');}
+
+/* ---- Quiz ---- */
+const Q=[
+ ['¿Qué principio indica dar solo los permisos indispensables?',['Separación de funciones','Mínimo privilegio','Need-to-share'],1],
+ ['¿Qué método es más fiable para sanear un SSD?',['Formatear rápido','Sobrescribir una vez con un archivo','Secure Erase / borrado criptográfico'],2],
+ ['¿Qué ataque aprovecha la remanencia en RAM?',['Cold boot','SQL injection','Phishing'],0],
+ ['DLP significa…',['Data Loss Prevention','Digital Link Protocol','Direct Login Policy'],0],
+ ['¿Qué derecho ARCO permite pedir la eliminación de tus datos?',['Acceso','Rectificación','Cancelación'],2]];
+let sc=0,ans=0;
+function quiz(){sc=0;ans=0;$('#qScore').textContent='0/'+Q.length;const box=$('#qBox');box.innerHTML='';
+  Q.forEach(([q,o,c])=>{const d=document.createElement('div');d.className='q';d.innerHTML='<p>'+q+'</p>';
+    o.forEach((t,i)=>{const b=document.createElement('button');b.className='opt';b.textContent=t;
+      b.onclick=()=>{if(d.dataset.done)return;d.dataset.done=1;ans++;
+        if(i===c){b.classList.add('good');sc++}else{b.classList.add('bad');d.children[c+1].classList.add('good')}
+        $('#qScore').textContent=sc+'/'+Q.length+(ans===Q.length?(sc===Q.length?' 🏆':' ✔'):'');};
+      d.appendChild(b)});box.appendChild(d)});}
+$('#qRst').onclick=quiz;quiz();
+</script>
+</body>
+</html>
