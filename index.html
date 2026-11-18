@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Seguridad y Privacidad de Datos | Unidad 3</title>
+<title>Seguridad y Privacidad de Datos</title>
 <meta name="description" content="Guía interactiva: gestión segura de datos, borrado y destrucción, remanencia, prevención de fuga de información y privacidad.">
 <style>
 :root{
@@ -106,9 +106,13 @@ details p{color:var(--mut);margin-top:10px;font-size:.93rem}
 .check:hover{background:#ffffff08}
 .check input{margin-top:5px;accent-color:var(--a)}
 .score{font-size:2.4rem;font-weight:800;color:var(--a)}
-.mem{display:grid;grid-template-columns:repeat(16,1fr);gap:3px;margin:10px 0}
-.mem i{aspect-ratio:1;background:var(--c);border-radius:3px;opacity:1;transition:opacity 1.2s}
-.mem.fade i{opacity:.08}
+.mem{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;margin:10px 0}
+.mem i{font-style:normal;font-family:ui-monospace,Menlo,monospace;font-size:.78rem;text-align:center;padding:7px 0;border-radius:6px;background:#ff6b8b14;color:var(--c);border:1px solid #ff6b8b33}
+.mem i.dead{color:#33415f;background:#0a1121;border-color:#16213a}
+.dm{background:#ff6b8b22;color:var(--c);border-radius:5px;padding:1px 5px;font-weight:700}
+.stat{display:flex;gap:18px;flex-wrap:wrap;margin:6px 0 12px;font-size:.9rem}
+.stat b{color:var(--a);font-size:1.3rem}
+@media(max-width:560px){.mem{grid-template-columns:repeat(8,1fr)}}
 footer{padding:40px 0;text-align:center;color:var(--mut);font-size:.85rem;border-top:1px solid var(--line)}
 .reveal{opacity:0;transform:translateY(20px);transition:.6s}
 .reveal.in{opacity:1;transform:none}
@@ -117,7 +121,7 @@ footer{padding:40px 0;text-align:center;color:var(--mut);font-size:.85rem;border
 <body>
 
 <nav><div class="wrap">
-  <b>🛡 Unidad 3</b>
+  <b>🛡 Seguridad y privacidad</b>
   <a href="#s31">3.1 Gestión</a>
   <a href="#s32">3.2 Borrado</a>
   <a href="#s33">3.3 Prevención de fuga</a>
@@ -249,6 +253,7 @@ footer{padding:40px 0;text-align:center;color:var(--mut);font-size:.85rem;border
   <div class="widget">
     <div class="wt">🧠 Remanencia en RAM <span class="live">INTERACTIVO</span></div>
     <p class="lead" style="margin-bottom:8px">Simula el apagado de un equipo y observa cómo se desvanecen los datos de la memoria con o sin enfriamiento.</p>
+    <div class="stat"><span>Datos legibles: <b id="memPct">100%</b></span><span>Tiempo sin energía: <b id="memT">0.0 s</b></span></div>
     <div class="mem" id="mem"></div>
     <div class="row">
       <button class="btn" id="memOff">Apagar equipo</button>
@@ -295,10 +300,10 @@ footer{padding:40px 0;text-align:center;color:var(--mut);font-size:.85rem;border
     <div class="two">
       <div><label>Texto de entrada</label>
         <textarea id="dIn">Hola, mi correo es ana.lopez@empresa.mx y mi tarjeta 4111 1111 1111 1111. Mi CURP: GOMA800101HDFRRN09, tel 55 1234 5678. IP del servidor 192.168.1.15.</textarea>
-        <div class="row" style="margin-top:10px"><button class="btn" id="dGo">Analizar</button><button class="btn ghost" id="dEx">Ejemplo limpio</button></div>
+        <div class="row" style="margin-top:10px"><button class="btn" id="dGo">Analizar</button><button class="btn ghost" id="dSens">Ejemplo con datos</button><button class="btn ghost" id="dEx">Ejemplo limpio</button></div>
       </div>
       <div><label>Resultado (enmascarado)</label>
-        <div class="log" id="dOut" style="height:130px;white-space:pre-wrap"></div>
+        <div class="log" id="dOut" style="height:150px;white-space:pre-wrap;line-height:1.7"></div>
         <div id="dRes" style="margin-top:10px;font-size:.9rem"></div>
       </div>
     </div>
@@ -370,7 +375,7 @@ footer{padding:40px 0;text-align:center;color:var(--mut);font-size:.85rem;border
   </div>
 </div></section>
 
-<footer><div class="wrap">Unidad 3 · Seguridad y privacidad de datos — Material educativo interactivo.</div></footer>
+<footer><div class="wrap">Seguridad y privacidad de datos — Material educativo interactivo.</div></footer>
 
 <script>
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
@@ -426,27 +431,71 @@ $('#wGo').onclick=()=>{wipeReset();const n=+$('#wMethod').value;let pass=1,i=0;$
   },n>10?8:40);};
 
 /* ---- RAM remanence ---- */
-const mem=$('#mem');for(let i=0;i<96;i++){const e=document.createElement('i');e.style.opacity=.55+Math.random()*.45;mem.appendChild(e);}
-function memFade(sec,msg){mem.classList.remove('fade');
-  [...mem.children].forEach(e=>e.style.transitionDuration=(sec*(.6+Math.random()*.8))+'s');
-  void mem.offsetWidth;mem.classList.add('fade');$('#memInfo').innerHTML=msg;}
-$('#memOff').onclick=()=>memFade(3,'Equipo apagado. La memoria se degrada en pocos segundos a temperatura ambiente.');
-$('#memCold').onclick=()=>memFade(14,'<span class="no">Enfriada:</span> los datos persisten mucho más tiempo. Un atacante podría extraer claves de cifrado.');
-$('#memRst').onclick=()=>{mem.classList.remove('fade');[...mem.children].forEach(e=>e.style.transitionDuration='.2s');
-  $('#memInfo').textContent='Estado: encendido. Memoria cargada con datos y claves.';};
+const memEl=$('#mem'),mc=[];
+for(let i=0;i<96;i++){const e=document.createElement('i');
+  e.textContent=Math.floor(Math.random()*256).toString(16).padStart(2,'0').toUpperCase();
+  memEl.appendChild(e);mc.push({e,d:Math.random(),t:e.textContent});}
+let memRaf=0;
+function memRun(mult,label){
+  cancelAnimationFrame(memRaf);memReset(true);
+  const t0=performance.now();
+  (function step(now){
+    const t=(now-t0)/1000;let alive=0;
+    mc.forEach(c=>{const life=(2+c.d*5)*mult;
+      if(t>=life){if(!c.e.classList.contains('dead')){c.e.classList.add('dead');c.e.textContent='··';c.e.style.opacity=1}}
+      else{alive++;c.e.style.opacity=(1-.65*(t/life)).toFixed(2)}});
+    $('#memPct').textContent=Math.round(alive/mc.length*100)+'%';
+    $('#memT').textContent=t.toFixed(1)+' s';
+    $('#memInfo').innerHTML=label;
+    if(alive>0)memRaf=requestAnimationFrame(step);
+    else $('#memInfo').innerHTML='<b class="ok">Memoria borrada.</b> Se perdieron todos los datos tras '+t.toFixed(1)+' s.';
+  })(t0);
+}
+function memReset(keep){
+  cancelAnimationFrame(memRaf);
+  mc.forEach(c=>{c.e.classList.remove('dead');c.e.textContent=c.t;c.e.style.opacity=1});
+  $('#memPct').textContent='100%';$('#memT').textContent='0.0 s';
+  if(!keep)$('#memInfo').textContent='Estado: encendido. Memoria cargada con datos y claves.';
+}
+$('#memOff').onclick=()=>memRun(1,'Equipo apagado a temperatura ambiente: la memoria se degrada en pocos segundos.');
+$('#memCold').onclick=()=>memRun(6,'<span class="no">Memoria enfriada:</span> los datos persisten mucho más. Un atacante podría extraer claves de cifrado.');
+$('#memRst').onclick=()=>memReset(false);
 
 /* ---- DLP ---- */
+const esc=t=>t.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const luhn=n=>{let s=0,d=false;for(let i=n.length-1;i>=0;i--){let x=+n[i];if(d){x*=2;if(x>9)x-=9}s+=x;d=!d}return s%10===0};
 const rules=[
- ['Tarjeta',/\b(?:\d[ -]?){13,16}\b/g,m=>'****-****-****-'+m.replace(/\D/g,'').slice(-4)],
- ['Correo',/[\w.+-]+@[\w-]+\.[\w.]+/g,m=>m[0]+'***@***'],
- ['CURP',/\b[A-Z]{4}\d{6}[HM][A-Z]{5}[A-Z0-9]\d\b/g,()=>'[CURP]'],
- ['Teléfono',/\b\d{2}[ -]?\d{4}[ -]?\d{4}\b/g,()=>'[TEL]'],
- ['IP',/\b(?:\d{1,3}\.){3}\d{1,3}\b/g,()=>'[IP]']];
-function dlp(){let t=$('#dIn').value,found={};
-  rules.forEach(([n,re,f])=>{t=t.replace(re,m=>{found[n]=(found[n]||0)+1;return f(m)})});
-  $('#dOut').textContent=t;const k=Object.keys(found);
-  $('#dRes').innerHTML=k.length?'<span class="no">⚠ '+k.reduce((a,x)=>a+found[x],0)+' elementos sensibles</span> — '+k.map(x=>'<span class="pill p-c">'+x+' ×'+found[x]+'</span>').join(''):'<span class="ok">✔ Sin datos sensibles detectados.</span>';}
-$('#dGo').onclick=dlp;$('#dEx').onclick=()=>{$('#dIn').value='La reunión del equipo será el jueves a las 10:00 en la sala 2.';dlp();};dlp();
+ {n:'Tarjeta',re:/\b\d(?:[ -]?\d){12,18}\b/g,ok:m=>luhn(m.replace(/\D/g,'')),mask:m=>'••••'+m.replace(/\D/g,'').slice(-4)},
+ {n:'CURP',re:/\b[A-Z]{4}\d{6}[HM][A-Z]{5}[A-Z0-9]\d\b/gi,mask:()=>'[CURP]'},
+ {n:'RFC',re:/\b[A-ZÑ&]{3,4}\d{6}[A-Z0-9]{3}\b/gi,mask:()=>'[RFC]'},
+ {n:'Correo',re:/[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g,mask:m=>m[0]+'•••@•••'},
+ {n:'IP',re:/\b(?:\d{1,3}\.){3}\d{1,3}\b/g,mask:()=>'[IP]'},
+ {n:'Teléfono',re:/\b\d{2}[ -]?\d{4}[ -]?\d{4}\b/g,mask:()=>'[TEL]'}];
+function detect(text){
+  const hits=[];
+  rules.forEach((r,pri)=>{r.re.lastIndex=0;let m;
+    while((m=r.re.exec(text))){if(r.ok&&!r.ok(m[0]))continue;
+      hits.push({s:m.index,e:m.index+m[0].length,n:r.n,out:r.mask(m[0]),pri});}});
+  hits.sort((a,b)=>a.s-b.s||a.pri-b.pri);
+  const used=[];let last=-1;
+  hits.forEach(h=>{if(h.s>=last){used.push(h);last=h.e}});
+  return used;
+}
+function dlp(){
+  const text=$('#dIn').value,hits=detect(text);let html='',pos=0;
+  hits.forEach(h=>{html+=esc(text.slice(pos,h.s))+'<span class="dm">'+esc(h.out)+'</span>';pos=h.e});
+  html+=esc(text.slice(pos));
+  $('#dOut').innerHTML=html||'<span class="dim">(vacío)</span>';
+  const cnt={};hits.forEach(h=>cnt[h.n]=(cnt[h.n]||0)+1);const k=Object.keys(cnt);
+  $('#dRes').innerHTML=k.length
+   ?'<span class="no">⚠ '+hits.length+' elemento(s) sensible(s) detectado(s)</span><br>'+k.map(x=>'<span class="pill p-c">'+x+' ×'+cnt[x]+'</span>').join('')
+   :'<span class="ok">✔ Sin datos sensibles detectados.</span>';
+}
+$('#dGo').onclick=dlp;
+$('#dIn').addEventListener('input',dlp);
+$('#dEx').onclick=()=>{$('#dIn').value='La reunión del equipo será el jueves a las 10:00 en la sala 2.';dlp();};
+$('#dSens').onclick=()=>{$('#dIn').value='Hola, mi correo es ana.lopez@empresa.mx y mi tarjeta 4111 1111 1111 1111. Mi CURP: GOMA800101HDFRRN09, tel 55 1234 5678. IP del servidor 192.168.1.15.';dlp();};
+dlp();
 
 /* ---- Checklist ---- */
 const items=['Aviso de privacidad visible y claro','Consentimiento recabado antes de tratar datos','Solo se recopilan los datos necesarios','Datos sensibles cifrados','Acceso restringido por roles','Procedimiento para derechos ARCO','Plazo de conservación definido y borrado seguro','Plan de respuesta a incidentes y notificación'];
